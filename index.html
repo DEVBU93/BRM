@@ -1,9 +1,83 @@
 <!DOCTYPE html>
-<html><head><title>BRM_Bubatronik</title></head>
-<body><h1>BRM_Bubatronik - Music Bubatronik desde Tarragona</h1>
-<p>Escucha: https://bubatronik.radiostream123.com/</p>
-<p>Escucha live: http://uk19freenew.listen2myradio.com:38276</p>
-<iframe src="http://uk19freenew.listen2myradio.com:38276" width="300" height="100"></iframe>
-<p>Email: rubenrodriguez.f.93@gmail.com | Instagram: @bubatronik_brm</p>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔊 BRM_Bubatronik | Techno Live desde Tarragona</title>
+    <p>Escucha: https://bubatronik.radiostream123.com/</p>
+    <p>Escucha live: http://uk19freenew.listen2myradio.com:38276</p>
+    <iframe src="http://uk19freenew.listen2myradio.com:38276" width="300" height="100"></iframe>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Courier New', monospace; background: linear-gradient(45deg, #000, #1a0033, #330066); color: #00ff88; min-height: 100vh; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 40px 0; }
+        h1 { font-size: clamp(2.5rem, 8vw, 6rem); background: linear-gradient(90deg, #00ff88, #ff00ff, #00ffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px #00ff88; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { filter: drop-shadow(0 0 10px #00ff88); } to { filter: drop-shadow(0 0 30px #ff00ff); } }
+        .player-section { background: rgba(0,0,0,0.8); border: 2px solid #00ff88; border-radius: 20px; padding: 40px; margin: 40px 0; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0,255,136,0.3); }
+        #audio-player { width: 100%; height: 80px; background: #111; border-radius: 15px; margin: 20px 0; }
+        .status { text-align: center; font-size: 1.2rem; padding: 20px; background: rgba(0,255,136,0.1); border-radius: 10px; }
+        .info { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+        .card { background: rgba(255,255,255,0.05); border: 1px solid #00ff88; border-radius: 15px; padding: 20px; text-align: center; transition: transform 0.3s; }
+        .card:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,255,136,0.5); }
+        .social { margin-top: 40px; text-align: center; }
+        .social a { color: #00ff88; font-size: 2rem; margin: 0 15px; text-decoration: none; transition: all 0.3s; }
+        .social a:hover { color: #ff00ff; transform: translateY(-5px); }
+        @media (max-width: 768px) { .container { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BRM_Bubatronik</h1>
+            <p style="font-size: 1.5rem; opacity: 0.8;">Techno / Bubatronik Live desde Tarragona, Catalunya</p>
+        </header>
+        
+        <div class="player-section">
+            <h2 style="text-align: center; margin-bottom: 20px;">🎧 Reproductor Live</h2>
+            <audio id="audio-player" controls crossorigin="anonymous">
+                <source src="http://uk19freenew.listen2myradio.com:38276/;stream.mp3" type="audio/mpeg">
+                Tu navegador no soporta audio HTML5.
+            </audio>
+            <div id="status" class="status">🔴 Desconectado - Transmitiendo cuando activo</div>
+        </div>
+        
+        <div class="info">
+            <div class="card">
+                <h3>📍 Ubicación</h3>
+                <p>Tarragona, Catalunya<br>ESPAÑA</p>
+            </div>
+            <div class="card">
+                <h3>⚡ Géneros</h3>
+                <p>Techno · Makina<br>Bubatronik · Hardtek</p>
+            </div>
+            <div class="card">
+                <h3>🌐 Stream</h3>
+                <p>128kbps MP3<br>Escucha global</p>
+            </div>
+        </div>
+        
+        <div class="social">
+            <a href="mailto:rubenrodriguez.f.93@gmail.com">📧 Email</a>
+            <a href="https://www.instagram.com/bubatronik_brm/">Instagram: @bubatronik_brm</a>
+            <a href="https://bubatronik.radiostream123.com/" target="_blank">🌐 Listen2MyRadio</a>
+            <a href="#" onclick="navigator.share({title:'BRM_Bubatronik',url:window.location.href})">📱 Compartir</a>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio-player');
+        const status = document.getElementById('status');
+        
+        audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
+        audio.addEventListener('playing', () => status.textContent = '🟢 🔴 LIVE EN DIRECTO');
+        audio.addEventListener('pause', () => status.textContent = '⏸️ Pausado');
+        audio.addEventListener('error', () => status.textContent = '🔴 Error stream - Revisa Mixxx');
+        
+        // Auto-connect cada 30s si parado
+        setInterval(() => {
+            if (audio.paused && !audio.ended) audio.play().catch(() => {});
+        }, 30000);
+    </script>
 </body>
 </html>
