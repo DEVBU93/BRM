@@ -94,9 +94,9 @@
                     
                         // Mobile: play on user touch
                         document.addEventListener('touchstart', () => player.play().catch(() => {}), {once: true});
-                    </script>
-                    <script>
+
                         const audio = document.getElementById('audio-player');
+                        const player = document.querySelector('audio');
                         const status = document.getElementById('status');
                         
                         audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
@@ -108,19 +108,7 @@
                         setInterval(() => {
                             if (audio.paused && !audio.ended) audio.play().catch(() => {});
                         }, 30000);
-                    </script>
-                    <script>
-                        const player = document.querySelector('audio');
-                        player.addEventListener('loadstart', () => console.log('Conectando...'));
-                        player.addEventListener('playing', () => {
-                          document.querySelector('.status')?.style.color = '#00ff88';
-                        });
-                        player.addEventListener('error', e => {
-                          console.log('Stream error:', e);
-                          player.src = 'http://uk19freenew.listen2myradio.com:38276/stream.mp3'; // retry
-                        });
-                        player.play().catch(() => {}); // autoplay mobile
-                    </script>
+                    </script>             
         </div>
 </body>
 </html>
