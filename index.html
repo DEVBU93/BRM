@@ -40,7 +40,30 @@
                         Stream no disponible - activa Mixxx.
                       </audio>
                       <p style="text-align:center; opacity:0.8;">Mixxx live → 🔴 LIVE | Pausa → ⏸️</p>
-                 
+                    <div id="status" class="status">SI NO SUENA = 🔴 Desconectado - Transmitiendo cuando activo</div>
+              </div>
+        
+            <div class="card">
+                <h3>📍 Ubicación</h3>
+                <p>Tarragona, Catalunya<br>ESPAÑA</p>
+            </div>
+            <div class="card">
+                <h3>⚡ Géneros</h3>
+                <p>Techno · Makina<br>Bubatronik · Hardtek</p>
+            </div>
+            <div class="card">
+                <h3>🌐 Stream</h3>
+                <p>128kbps MP3<br>Escucha global</p>
+                <p>Stream: Bubatronik live | Fallback: <a href="https://bubatronik.radiostream321.com/">Directo</a></p>
+            </div>
+        </div>
+        
+        <div class="social">
+            <a href="mailto:rubenrodriguez.f.93@gmail.com">📧 Email</a>
+            <a href="https://www.instagram.com/bubatronik_brm/">🚀 @bubatronik_brm</a>
+            <a href="https://bubatronik.radiostream123.com/" target="_blank">🌐 Listen2MyRadio</a>
+            <a href="#" onclick="navigator.share({title:'BRM_Bubatronik',url:window.location.href})">📱 Compartir</a>
+        </div>
                    <script>
                         const player = document.getElementById('player');
                         const status = document.getElementById('status');
@@ -73,58 +96,32 @@
                         // Mobile: play on user touch
                         document.addEventListener('touchstart', () => player.play().catch(() => {}), {once: true});
                     </script>
-                 
-                    <div id="status" class="status">SI NO SUENA = 🔴 Desconectado - Transmitiendo cuando activo</div>
-              </div>
-        
-            <div class="card">
-                <h3>📍 Ubicación</h3>
-                <p>Tarragona, Catalunya<br>ESPAÑA</p>
-            </div>
-            <div class="card">
-                <h3>⚡ Géneros</h3>
-                <p>Techno · Makina<br>Bubatronik · Hardtek</p>
-            </div>
-            <div class="card">
-                <h3>🌐 Stream</h3>
-                <p>128kbps MP3<br>Escucha global</p>
-                <p>Stream: Bubatronik live | Fallback: <a href="https://bubatronik.radiostream321.com/">Directo</a></p>
-            </div>
+                    <script>
+                        const audio = document.getElementById('audio-player');
+                        const status = document.getElementById('status');
+                        
+                        audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
+                        audio.addEventListener('playing', () => status.textContent = '🟢 🔴 LIVE EN DIRECTO');
+                        audio.addEventListener('pause', () => status.textContent = '⏸️ Pausado');
+                        audio.addEventListener('error', () => status.textContent = '🔴 Error stream - Revisa Mixxx');
+                        
+                        // Auto-connect cada 30s si parado
+                        setInterval(() => {
+                            if (audio.paused && !audio.ended) audio.play().catch(() => {});
+                        }, 30000);
+                    </script>
+                    <script>
+                        const player = document.querySelector('audio');
+                        player.addEventListener('loadstart', () => console.log('Conectando...'));
+                        player.addEventListener('playing', () => {
+                          document.querySelector('.status')?.style.color = '#00ff88';
+                        });
+                        player.addEventListener('error', e => {
+                          console.log('Stream error:', e);
+                          player.src = 'http://uk19freenew.listen2myradio.com:38276/stream.mp3'; // retry
+                        });
+                        player.play().catch(() => {}); // autoplay mobile
+                    </script>
         </div>
-        
-        <div class="social">
-            <a href="mailto:rubenrodriguez.f.93@gmail.com">📧 Email</a>
-            <a href="https://www.instagram.com/bubatronik_brm/">🚀 @bubatronik_brm</a>
-            <a href="https://bubatronik.radiostream123.com/" target="_blank">🌐 Listen2MyRadio</a>
-            <a href="#" onclick="navigator.share({title:'BRM_Bubatronik',url:window.location.href})">📱 Compartir</a>
-        </div>
-    </div>
-
-    <script>
-        const audio = document.getElementById('audio-player');
-        const status = document.getElementById('status');
-        
-        audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
-        audio.addEventListener('playing', () => status.textContent = '🟢 🔴 LIVE EN DIRECTO');
-        audio.addEventListener('pause', () => status.textContent = '⏸️ Pausado');
-        audio.addEventListener('error', () => status.textContent = '🔴 Error stream - Revisa Mixxx');
-        
-        // Auto-connect cada 30s si parado
-        setInterval(() => {
-            if (audio.paused && !audio.ended) audio.play().catch(() => {});
-        }, 30000);
-    </script>
-    <script>
-        const player = document.querySelector('audio');
-        player.addEventListener('loadstart', () => console.log('Conectando...'));
-        player.addEventListener('playing', () => {
-          document.querySelector('.status')?.style.color = '#00ff88';
-        });
-        player.addEventListener('error', e => {
-          console.log('Stream error:', e);
-          player.src = 'http://uk19freenew.listen2myradio.com:38276/stream.mp3'; // retry
-        });
-        player.play().catch(() => {}); // autoplay mobile
-    </script>
 </body>
 </html>
