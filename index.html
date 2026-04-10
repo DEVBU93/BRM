@@ -26,6 +26,7 @@
 <body>
     <div class="container">
             <h1>BRM Radio - Manada Flow</h1>
+             <a href="https://bubatronik.radiostream321.com/" target="_blank">🌐 Listen2MyRadio</a>
              <div class="player-section">
                     <h2 style="text-align: center; margin-bottom: 20px;">🎧 Reproductor Live</h2>
                         <h3 style="text-align: center; margin-bottom: 20px;">DESPLAZATE EN PANTALLA Y DALE A PLAY ;)</h2>             
@@ -59,13 +60,29 @@
         <div class="social">
             <a href="mailto:rubenrodriguez.f.93@gmail.com">📧 Email</a>
             <a href="https://www.instagram.com/bubatronik_brm/">🚀 @bubatronik_brm</a>
-            <a href="https://bubatronik.radiostream123.com/" target="_blank">🌐 Listen2MyRadio</a>
+            <a href="https://bubatronik.radiostream321.com/" target="_blank">🌐 Listen2MyRadio</a>
             <a href="#" onclick="navigator.share({title:'BRM_Bubatronik',url:window.location.href})">📱 Compartir</a>
         </div>
                    <script>
-                        const status = document.getElementById('status');
                         let reconnectInterval;
+                       
+                        const audio = document.getElementById('audio-player');
+                        const player = document.querySelector('audio');
+                        const status = document.getElementById('status');
+
+                     // Mobile: play on user touch
+                        document.addEventListener('touchstart', () => player.play().catch(() => {}), {once: true});
                     
+                        audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
+                        audio.addEventListener('playing', () => status.textContent = '🟢 🔴 LIVE EN DIRECTO');
+                        audio.addEventListener('pause', () => status.textContent = '⏸️ Pausado');
+                        audio.addEventListener('error', () => status.textContent = '🔴 Error stream - Revisa Mixxx');
+                        
+                        // Auto-connect cada 30s si parado
+                        setInterval(() => {
+                            if (audio.paused && !audio.ended) audio.play().catch(() => {});
+                        }, 30000);
+
                         player.addEventListener('loadstart', () => status.textContent = 'Cargando...');
                         player.addEventListener('playing', () => status.textContent = '🎵 Live - Conectado');
                         player.addEventListener('pause', () => status.textContent = 'Pausado');
@@ -74,7 +91,7 @@
                           reconnect();
                         });
                         player.addEventListener('ended', reconnect); // Streams loop
-                    
+                       
                         function reconnect() {
                           clearInterval(reconnectInterval);
                           reconnectInterval = setInterval(() => {
@@ -90,22 +107,6 @@
                           else player.pause();
                         }
                     
-                        // Mobile: play on user touch
-                        document.addEventListener('touchstart', () => player.play().catch(() => {}), {once: true});
-
-                        const audio = document.getElementById('audio-player');
-                        const player = document.querySelector('audio');
-                        const status = document.getElementById('status');
-                        
-                        audio.addEventListener('loadstart', () => status.textContent = '🟡 Conectando...');
-                        audio.addEventListener('playing', () => status.textContent = '🟢 🔴 LIVE EN DIRECTO');
-                        audio.addEventListener('pause', () => status.textContent = '⏸️ Pausado');
-                        audio.addEventListener('error', () => status.textContent = '🔴 Error stream - Revisa Mixxx');
-                        
-                        // Auto-connect cada 30s si parado
-                        setInterval(() => {
-                            if (audio.paused && !audio.ended) audio.play().catch(() => {});
-                        }, 30000);
                     </script>             
         </div>
 </body>
