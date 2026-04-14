@@ -999,6 +999,8 @@
         const dots=document.getElementById('artDots');
         IMG_IDS.forEach((id,i)=>{
           const slide=document.createElement('div');
+          const isVideo = VIDEO_IDS.has(id);
+          const imgEl = slide.querySelector('img');
           slide.className='artwork-slide'+(i===0?' active':'');
           slide.innerHTML=`
             <img
@@ -1013,16 +1015,6 @@
           if(i===0)dot.className='active';
           dot.addEventListener('click',()=>goSlide(i));
           dots.appendChild(dot);
-          const isVideo = VIDEO_IDS.has(id);
-          const imgEl = slide.querySelector('img');
-          if (isVideo) {
-            imgEl.style.cursor = 'pointer';
-            imgEl.addEventListener('click', ()=>{
-              // Aquí reutilizas tu zona de vídeo existente
-              const frame = document.getElementById('videoFrame');
-              frame.src = drivePreview(id);
-            });
-          }
         });
 
          
@@ -1041,6 +1033,15 @@
           document.getElementById('npTitle').textContent=t.t;
           document.getElementById('npNum').textContent=`#${t.n} · BUBATRONIK_BRM RADIO`;
           document.getElementById('videoThumb').src=thumb(IMG_IDS[curSlide],600);
+           
+          if (isVideo) {
+          imgEl.style.cursor = 'pointer';
+          imgEl.addEventListener('click', ()=>{
+          // Aquí reutilizas tu zona de vídeo existente
+          const frame = document.getElementById('videoFrame');
+          frame.src = drivePreview(id);
+          });
+          }
         }
           // si el slide actual es vídeo, cargarlo en el iframe
           const id = IMG_IDS[curSlide];
