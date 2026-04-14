@@ -997,10 +997,11 @@
         // BUILD ARTWORK CAROUSEL
         const wrap=document.getElementById('artworkWrap');
         const dots=document.getElementById('artDots');
+        const isVideo = VIDEO_IDS.has(id);
+        const slide=document.createElement('div');
+        const imgEl = slide.querySelector('img');
+        const dot=document.createElement('button');
         IMG_IDS.forEach((id,i)=>{
-          const slide=document.createElement('div');
-          const isVideo = VIDEO_IDS.has(id);
-          const imgEl = slide.querySelector('img');
           slide.className='artwork-slide'+(i===0?' active':'');
           slide.innerHTML=`
             <img
@@ -1011,7 +1012,7 @@
               data-video="${isVideo ? '1' : '0'}"
             >`;
           wrap.insertBefore(slide,wrap.querySelector('.artwork-overlay'));
-          const dot=document.createElement('button');
+
           if(i===0)dot.className='active';
           dot.addEventListener('click',()=>goSlide(i));
           dots.appendChild(dot);
@@ -1039,7 +1040,7 @@
           frame.src = drivePreview(id);
           });
           }
-        }
+        
           // si el slide actual es vídeo, cargarlo en el iframe
           const id = IMG_IDS[curSlide];
           if (VIDEO_IDS.has(id)) {
@@ -1055,7 +1056,7 @@
             }
           }
         setInterval(()=>goSlide((curSlide+1)%IMG_IDS.length),6000);
-         
+        } 
         // MINI GRID
         const mg=document.getElementById('miniGrid');
         IMG_IDS.forEach((id,i)=>{
