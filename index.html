@@ -724,7 +724,7 @@
          
             <!-- LEFT PANEL -->
             <div class="left-panel">
-         
+            
               <!-- ARTWORK CAROUSEL -->
               <div class="artwork-wrap" id="artworkWrap">
                 <!-- JS fills slides -->
@@ -735,6 +735,7 @@
                       <div class="now-playing-num" id="npNum"># · BUBATRONIK_BRM RADIO</div>
                     </div>
                     <div class="artwork-dots" id="artDots"></div>
+                    <iframe id="videoFrame" src="" allow="autoplay" allowfullscreen></iframe>
               </div>
          
               <!-- WAVEFORM -->
@@ -964,6 +965,11 @@
           '1Ww6IImH77HkTVOdFBCgOdxRAf05UmcQx',
           '1AfRxTtBU-Jkh0r2IgI7iI5-Fpdig_BvO',
           '1B7YCtFlCjq2PPcvmL9PSTaSw-0JG9cm_',
+          
+        ];
+        function thumb(id,sz){return`https://drive.google.com/thumbnail?id=${id}&sz=w${sz||333}`}
+         // Indica qué IDs son vídeo
+        const VIDEO_IDS = new Set([
           '1oSf0bwjQKunCvlOh6xVad2CgzEItW5bh',
           '17tBnQjFjIkfaZD6-tqdOwzimvJ_KCNvh',
           '1cZv3sOR7kCdtfUXdFFwNJ57Tf0oR4_WQ',
@@ -974,12 +980,44 @@
           '1fDRdjI8ChXAF1blMSDuUGaKHx2W-lbyJ',
           '17tBnQjFjIkfaZD6-tqdOwzimvJ_KCNvh',  
           '1Kx_s6VetzCrZTI6bYJr-NiAfYAOORZr7',
-        ];
-        function thumb(id,sz){return`https://drive.google.com/thumbnail?id=${id}&sz=w${sz||333}`}
-         
+        ]);
+        
+        function drivePreview(id){
+          return `https://drive.google.com/file/d/${id}/preview`;
+        }
         // BUILD ARTWORK CAROUSEL
         const wrap=document.getElementById('artworkWrap');
         const dots=document.getElementById('artDots');
+            IMG_IDS.forEach((id,i)=>{
+          const slide=document.createElement('div');
+          slide.className='artwork-slide'+(i===0?' active':'');
+          const isVideo = VIDEO_IDS.has(id);
+        
+          slide.innerHTML=`
+            <img
+              src="${thumb(id,800)}"
+              alt="BUBATRONIK_BRM Art ${i+1}"
+              loading="${i===0?'eager':'lazy'}"
+              data-id="${id}"
+              data-video="${isVideo ? '1' : '0'}"
+            >`;
+        
+          const imgEl = slide.querySelector('img');
+          if (isVideo) {
+            imgEl.style.cursor = 'pointer';
+            imgEl.addEventListener('click', ()=>{
+              // Aquí reutilizas tu zona de vídeo existente
+              const frame = document.getElementById('videoFrame');
+              frame.src = drivePreview(id);
+            });
+          }
+        
+          wrap.insertBefore(slide,wrap.querySelector('.artwork-overlay'));
+          const dot=document.createElement('button');
+          if(i===0)dot.className='active';
+          dot.addEventListener('click',()=>goSlide(i));
+          dots.appendChild(dot);
+        });
         IMG_IDS.forEach((id,i)=>{
           const slide=document.createElement('div');
           slide.className='artwork-slide'+(i===0?' active':'');
