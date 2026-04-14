@@ -21,6 +21,9 @@
         .social { margin-top: 40px; text-align: center; }
         .social a { color: #00ff88; font-size: 2rem; margin: 0 15px; text-decoration: none; transition: all 0.3s; }
         .social a:hover { color: #ff00ff; transform: translateY(-5px); }
+		pointer-events: all;
+  		position: relative;
+  		z-index: 10;
         @media (max-width: 768px) { .container { padding: 10px; } }
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
         :root{
@@ -683,7 +686,11 @@
          
         <!-- TICKER -->
         <div class="ticker-wrap">
-          <div class="ticker-label">BUBATRONIK_BRM RADIO</div>
+          <div class="ticker-label">
+			  <audio id="audio-player" controls style="width:33%;">
+				    <source src="https://bubatronik.radiostream321.com/" type="audio/mpeg">
+		      </audio> 
+			  BUBATRONIK_BRM RADIO</div>
           <div style="overflow:hidden;flex:1;display:flex">
             <div class="ticker-track" id="ticker">
               <!-- JS fills this -->
@@ -716,11 +723,7 @@
               </div>
             </div>
             <div class="station-freq">
-              <div class="freq">			
-			  <audio id="audio-player" controls style="width:33%;">
-				    <source src="https://bubatronik.radiostream321.com/" type="audio/mpeg">
-		      </audio> 
-			  </div>
+              <div class="freq">666.333</div>
               <div class="band">DIGITAL · STREAM</div>
               <div class="date" id="clock">--:-- · --/--/----</div>
             </div>
