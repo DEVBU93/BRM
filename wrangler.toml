@@ -1,0 +1,18 @@
+# BRM Stream Proxy — Cloudflare Worker Config
+# Rubén Rodríguez Francisco · DEVBU93 · ManadaSalvaje
+
+name       = "brm-stream-proxy"
+main       = "worker.js"
+compatibility_date = "2026-01-01"
+
+[observability]
+enabled = true
+
+# Rutas: el worker responde en tu dominio personalizado
+# Descomenta si tienes Cloudflare como DNS de worldmos.world:
+# [[routes]]
+# pattern = "stream.worldmos.world/*"
+# zone_name = "worldmos.world"
+
+# O usa la URL por defecto de Workers:
+# https://brm-stream-proxy.TU-CUENTA.workers.dev/stream
