@@ -1928,38 +1928,51 @@
     toast(`🎵 Filtro: ${activeGenre || 'Todos los géneros'}`);
   });
 
-  // ── STREAM STATUS ────────────────────────────────────────
-  function checkStatus() {
-    const html = document.querySelector('html');
+  // ── STREAM STATUS — via CF Worker /health (sin corsproxy.io) ──
+  const WORKER_HEALTH = 'https://brm.rubenrodriguez-f-93.workers.dev/health';
 
-    fetch('https://corsproxy.io/?' + encodeURIComponent('http://uk4freenew.listen2myradio.com:25771/stats?json=1'))
-      .then(r => r.json())
+  function setOnline(listeners) {
+    document.querySelector('html').dataset.status          = 'online';
+    document.getElementById('statusText').textContent      = 'EN VIVO ✓';
+    document.getElementById('onairInner').textContent      = 'ON AIR';
+    document.getElementById('onairLabel').textContent      = '▶ EMITIENDO EN VIVO';
+    document.getElementById('listenerCount').textContent   = listeners ?? '---';
+    document.getElementById('freqListeners').textContent   = `● OYENTES: ${listeners ?? '---'}`;
+  }
+
+  function setOffline() {
+    document.querySelector('html').dataset.status          = 'offline';
+    document.getElementById('statusText').textContent      = 'OFFLINE';
+    document.getElementById('onairInner').textContent      = 'OFF';
+    document.getElementById('onairLabel').textContent      = '⏸ NO EMITIENDO';
+    document.getElementById('listenerCount').textContent   = '0';
+    document.getElementById('freqListeners').textContent   = '● LISTENERS: 0';
+  }
+
+  function checkStatus() {
+    // 1️⃣ Pedir /health al Worker — CORS limpio, sin proxy externo
+    fetch(WORKER_HEALTH, { cache: 'no-store' })
+      .then(r => {
+        if (!r.ok) throw new Error('health ' + r.status);
+        return r.json();
+      })
       .then(data => {
-        html.dataset.status = 'online';
-        document.getElementById('statusText').textContent    = 'EN VIVO ✓';
-        document.getElementById('onairInner').textContent    = 'ON AIR';
-        document.getElementById('onairLabel').textContent    = '▶ EMITIENDO EN VIVO';
-        const listeners = data.currentlisteners || data.stationlisteners || 0;
-        document.getElementById('listenerCount').textContent = listeners;
-        document.getElementById('freqListeners').textContent = `● OYENTES: ${listeners}`;
+        // El Worker está online → stream accesible
+        if (data.status === 'ok') {
+          setOnline(data.listeners ?? null);
+        } else {
+          setOffline();
+        }
       })
       .catch(() => {
-        // Try head request
-        fetch('https://bubatronik.radiostream321.com/', { method: 'GET', mode: 'no-cors' })
-          .then(() => {
-            html.dataset.status = 'online';
-            document.getElementById('statusText').textContent = 'EN VIVO ✓';
-            document.getElementById('onairInner').textContent = 'ON AIR';
-            document.getElementById('onairLabel').textContent = '▶ EMITIENDO EN VIVO';
-          })
-          .catch(() => {
-            html.dataset.status = 'offline';
-            document.getElementById('statusText').textContent = 'OFFLINE';
-            document.getElementById('onairInner').textContent = 'OFF';
-            document.getElementById('onairLabel').textContent = '⏸ NO EMITIENDO';
-            document.getElementById('listenerCount').textContent = '0';
-            document.getElementById('freqListeners').textContent = '● LISTENERS: 0';
-          });
+        // 2️⃣ Fallback: intentar HEAD al worker raíz (no-cors, solo detecta conectividad)
+        fetch('https://brm.rubenrodriguez-f-93.workers.dev/', {
+          method: 'HEAD',
+          mode:   'no-cors',
+          cache:  'no-store',
+        })
+          .then(() => setOnline(null))
+          .catch(() => setOffline());
       });
   }
 
